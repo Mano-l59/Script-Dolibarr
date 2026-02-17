@@ -4,44 +4,14 @@
 
 ssh mano.lemaire.etu@dattier.iutinfo.fr
 
-#Création et configuration de la machine DataBase
+#Création et configuration des VMs
 
-##si vm déjà présente alors la supprimer
+VM_LIST=("SAE4db" "SAE4dolibarr" "SAE4save")
 
-vmiut créer SAE4db
-
-vmiut demarrer SAE4db
-
-##garde la dernière ligne ip-potentielle=10.xx.xx.xxx et se connecte : ssh root@10.xx.xx.xxx
-
-su -
-root
-
-"iface enp0s3 inet static adress 10.42.173.1 netmask 255.255.255.0 gateway 10.42.0.1"
-
-##création de la base postgres soit par docker soit manuel
-
-
-#Création et configuration de la machine Dolibarr
-
-##si vm déjà présente alors la supprimer
-
-vmiut créer SAE4dolibarr
-
-vmiut demarrer SAE4dalibarr
-
-##garde la dernière ligne ip-potentielle=10.xx.xx.xxx et se connecte : ssh root@10.xx.xx.xxx
-
-
-
-#Création et configuration de la machine Save
-
-##si vm déjà présente alors la supprimer
-
-vmiut créer SAE4save
-
-vmiut demarrer SAE4save
-
-##garde la dernière ligne ip-potentielle=10.xx.xx.xxx et se connecte : ssh root@10.xx.xx.xxx
-
-
+for VM in "${VM_LIST[@]}"; do
+    if vmiut lister | grep -q "$VM"; then
+        vmiut supprimer "$VM"
+    fi
+    vmiut creer "$VM"
+    vmiut demarrer "$VM"
+done
