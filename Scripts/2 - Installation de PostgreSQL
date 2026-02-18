@@ -1,0 +1,7 @@
+#! /bin/bash
+
+ssh user@10.42.173.11 << 'EOF'
+
+podman run -e POSTGRES_USER='user' -e POSTGRES_PASSWORD='user' POSTGRES_DB='userdb' -p 5432:5432 postgres
+
+EOF
