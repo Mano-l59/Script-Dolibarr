@@ -2,7 +2,7 @@
 
 #Connection à dattier
 
-ssh mano.lemaire.etu@dattier.iutinfo.fr
+ssh -T mano.lemaire.etu@dattier.iutinfo.fr << 'EOF'
 
 #Création et configuration des VMs
 
@@ -15,3 +15,13 @@ for VM in "${VM_LIST[@]}"; do
     vmiut creer "$VM"
     vmiut demarrer "$VM"
 done
+
+IP_SAVE=$(vmiut info SAE4save | grep ip-potentielle1 | cut -d= -f2)
+IP_DOLI=$(vmiut info SAE4dolibarr | grep ip-potentielle1 | cut -d= -f2)
+IP_DB=$(vmiut info SAE4db | grep ip-potentielle1 | cut -d= -f2)
+
+echo "IP_PROXY=$IP_PROXY" > vm.ip
+echo "IP_DOLI=$IP_DOLI" >> vm.ip
+echo "IP_DB=$IP_DB" >> vm.ip
+
+EOF
