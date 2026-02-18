@@ -26,6 +26,11 @@ ssh-copy-id -i .ssh/id_rsa root@IP_DB
 
 ssh user@$IP_DB << 'DB_EOF'
 
+su -
+root
+
+echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
+
 iface enp0s3 inet static
     address 10.42.173.11
     netmask 255.255.255.0
@@ -35,6 +40,11 @@ DB_EOF
 
 ssh user@$IP_DOLI << 'DOLI_EOF'
 
+su -
+root
+
+echo "PermitRootLogin yes" >> /etc/ssh/sshd_config 
+
 iface enp0s3 inet static
     address 10.42.173.10
     netmask 255.255.255.0
@@ -43,6 +53,11 @@ iface enp0s3 inet static
 DOLI_EOF
 
 ssh user@$IP_SAVE << 'SAVE_EOF'
+
+su -
+root
+
+echo "PermitRootLogin yes" >> /etc/ssh/sshd_config 
 
 iface enp0s3 inet static
     address 10.42.173.12
