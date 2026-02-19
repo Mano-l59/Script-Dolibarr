@@ -20,6 +20,13 @@ IP_SAVE=$(vmiut info SAE4save | grep ip-potentielle1 | cut -d= -f2)
 IP_DOLI=$(vmiut info SAE4dolibarr | grep ip-potentielle1 | cut -d= -f2)
 IP_DB=$(vmiut info SAE4db | grep ip-potentielle1 | cut -d= -f2)
 
+<<<<<<< HEAD
+=======
+ssh-copy-id -i .ssh/id_rsa root@$IP_SAVE
+ssh-copy-id -i .ssh/id_rsa root@$IP_DOLI
+ssh-copy-id -i .ssh/id_rsa root@$IP_DB
+
+>>>>>>> refs/remotes/origin/main
 ssh user@$IP_DB << 'DB_EOF'
 
 su -
