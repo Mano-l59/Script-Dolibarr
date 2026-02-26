@@ -16,54 +16,49 @@ for VM in "${VM_LIST[@]}"; do
     vmiut demarrer "$VM"
 done
 
-IP_SAVE=$(vmiut info SAE4save | grep ip-potentielle1 | cut -d= -f2)
-IP_DOLI=$(vmiut info SAE4dolibarr | grep ip-potentielle1 | cut -d= -f2)
-IP_DB=$(vmiut info SAE4db | grep ip-potentielle1 | cut -d= -f2)
+echo "Attente démarrage..."
+sleep 20
 
-ssh user@$IP_DB << 'DB_EOF'
+cat > /tmp/config_IPs.sh << 'EOS'
+#!/bin/bash
 
-su -
-root
+declare -A VM_IPS=(
+    [SAE4db]=10.42.173.11
+    [SAE4dolibarr]=10.42.173.10
+    [SAE4save]=10.42.173.12
+)
 
-echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
+for VM in "${!VM_IPS[@]}"; do
+    IP=${VM_IPS[$VM]}
+    echo "Configuration réseau pour $VM -> $IP"
 
-echo "iface enp0s3 inet static
-    address 10.42.173.11
+    cat > /tmp/vm_net.sh << EONET_SCRIPT
+#!/bin/bash
+
+cat > /etc/network/interfaces <<EONET
+auto lo
+iface lo inet loopback
+
+auto enp0s3
+iface enp0s3 inet static
+    address $IP
     netmask 255.255.255.0
-    gateway 10.42.173.1" > /etc/network/interfaces
+    gateway 10.42.0.1
+EONET
 
-DB_EOF
+systemctl restart networking
+EONET_SCRIPT
 
-ssh user@$IP_DOLI << 'DOLI_EOF'
+    chmod +x /tmp/vm_net.sh
 
-su -
-root
+    export SCRIPT=/tmp/vm_net.sh
+    vmiut exec "$VM"
+done
 
-echo "PermitRootLogin yes" >> /etc/ssh/sshd_config 
+EOS
 
-echo "iface enp0s3 inet static
-    address 10.42.173.10
-    netmask 255.255.255.0
-    gateway 10.42.173.1" > /etc/network/interfaces
+chmod +x /tmp/config_IPs.sh
 
-DOLI_EOF
-
-ssh user@$IP_SAVE << 'SAVE_EOF'
-
-su -
-root
-
-echo "PermitRootLogin yes" >> /etc/ssh/sshd_config 
-
-echo "iface enp0s3 inet static
-    address 10.42.173.12
-    netmask 255.255.255.0
-    gateway 10.42.173.1" > /etc/network/interfaces
-
-SAVE_EOF
-
-ssh-copy-id -i .ssh/id_rsa root@10.42.173.10
-ssh-copy-id -i .ssh/id_rsa root@10.42.173.11
-ssh-copy-id -i .ssh/id_rsa root@10.42.173.12
+/tmp/config_IPs.sh
 
 EOF
