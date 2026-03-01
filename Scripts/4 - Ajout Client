@@ -1,0 +1,67 @@
+#! /bin/bash
+
+#Création de la variable client et vérification qu'il y a un argument
+
+CLIENT=$1
+
+if [ -z "$CLIENT" ]; then
+    echo "Usage: $0 nom_client"
+    exit 1
+fi
+
+#Génération d'un mdp aléatoire
+MDP=$(openssl rand -base64 8)
+
+echo "Déploiement du client $CLIENT"
+echo "Mot de passe DB : $MDP"
+
+#Connection à dattier
+
+ssh -T mano.lemaire.etu@dattier.iutinfo.fr << EOF
+
+#Ajout de la base du client
+
+cat > /tmp/ajout_client_psql.sh << EOS
+#!/bin/bash
+
+echo "Ajout de la base de $CLIENT..."
+podman exec -i postgres_doli psql -U postgres << SQL
+CREATE USER $CLIENT WITH PASSWORD '$MDP';
+CREATE DATABASE $CLIENT OWNER $CLIENT;
+SQL
+
+EOS
+
+cat > /tmp/ajout_client_dolibarr.sh << EOS
+#!/bin/bash
+
+echo "Lancement du conteneur Dolibarr de $CLIENT..."
+
+podman rm -f dolibarr_$CLIENT 2>/dev/null
+
+podman run -d \\
+    --name dolibarr_$CLIENT \\
+    -p 80:80 \\
+    -e DOLI_DB_TYPE=pgsql \\
+    -e DOLI_DB_HOST=10.42.173.11 \\
+    -e DOLI_DB_NAME=$CLIENT \\
+    -e DOLI_DB_USER=$CLIENT \\
+    -e DOLI_DB_PASSWORD=$MDP \\
+    -e DOLI_DB_PORT=5432 \\
+    -e DOLI_DB_HOST_PORT=5432 \\
+    docker.io/tuxgasy/dolibarr
+
+echo "Conteneur lancé :"
+podman ps
+EOS
+
+chmod +x /tmp/ajout_client_psql.sh
+chmod +x /tmp/ajout_client_dolibarr.sh
+
+export SCRIPT=/tmp/ajout_client_psql.sh
+vmiut exec SAE4db
+
+export SCRIPT=/tmp/ajout_client_dolibarr.sh
+vmiut exec SAE4dolibarr
+
+EOF
