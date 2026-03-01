@@ -1,0 +1,50 @@
+#! /bin/bash
+
+#Connection à dattier
+
+ssh -T mano.lemaire.etu@dattier.iutinfo.fr << 'EOF'
+
+cat > /tmp/config_dolibarr.sh << 'EOS'
+#!/bin/bash
+
+echo "Installation de Podman..."
+apt update
+apt install -y podman
+
+echo "Suppression ancien conteneur si présent..."
+podman rm -f dolibarr 2>/dev/null
+
+echo "Suppression anciens volumes si présents..."
+podman volume rm dolibarr_html 2>/dev/null
+podman volume rm dolibarr_docs 2>/dev/null
+
+echo "Création des volumes Dolibarr..."
+podman volume create dolibarr_html
+podman volume create dolibarr_docs
+
+echo "Lancement du conteneur Dolibarr..."
+
+podman run -d \
+    --name dolibarr \
+    -p 80:80 \
+    -e DOLI_DB_TYPE=pgsql \
+    -e DOLI_DB_HOST=10.42.173.11 \
+    -e DOLI_DB_NAME=dolibarr \
+    -e DOLI_DB_USER=dolibarr \
+    -e DOLI_DB_PASSWORD=dolibarr \
+    -e DOLI_DB_PORT=5432 \
+    -e DOLI_DB_HOST_PORT=5432 \
+    -v dolibarr_html:/var/www/html \
+    -v dolibarr_docs:/var/www/documents \
+    docker.io/tuxgasy/dolibarr
+
+echo "Conteneur lancé :"
+podman ps
+EOS
+
+chmod +x /tmp/config_dolibarr.sh
+
+export SCRIPT=/tmp/config_dolibarr.sh
+vmiut exec SAE4dolibarr
+
+EOF

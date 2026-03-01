@@ -19,6 +19,9 @@ podman volume exists pgdata || podman volume create pgdata
 echo "Suppression ancien conteneur si présent..."
 podman rm -f postgres_doli 2>/dev/null
 
+echo "Suppression ancien volume si présent..."
+podman volume rm pgdata 2>/dev/null
+
 echo "Lancement du conteneur PostgreSQL..."
 podman run -d \
     --name postgres_doli \
