@@ -10,10 +10,14 @@ if [ -z "$CLIENT" ]; then
 fi
 
 #Génération d'un mdp aléatoire
-MDP=$(openssl rand -base64 8)
+MDP=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 8)
+
+#Génération d'un port aléatoire
+PORT=$((8000 + RANDOM % 1000))
 
 echo "Déploiement du client $CLIENT"
 echo "Mot de passe DB : $MDP"
+echo "Port utilisé : $PORT"
 
 #Connection à dattier
 
@@ -25,7 +29,7 @@ cat > /tmp/ajout_client_psql.sh << EOS
 #!/bin/bash
 
 echo "Ajout de la base de $CLIENT..."
-podman exec -i postgres_doli psql -U postgres << SQL
+podman exec -i postgres_doli psql -U dolibarr << SQL
 CREATE USER $CLIENT WITH PASSWORD '$MDP';
 CREATE DATABASE $CLIENT OWNER $CLIENT;
 SQL
@@ -41,7 +45,7 @@ podman rm -f dolibarr_$CLIENT 2>/dev/null
 
 podman run -d \\
     --name dolibarr_$CLIENT \\
-    -p 80:80 \\
+    -p $PORT:80 \\
     -e DOLI_DB_TYPE=pgsql \\
     -e DOLI_DB_HOST=10.42.173.11 \\
     -e DOLI_DB_NAME=$CLIENT \\
