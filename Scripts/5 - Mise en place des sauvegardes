@@ -81,6 +81,22 @@ rsync -a "$BACKUP_DIR/" rsync://10.42.173.12/backups/$DATE/
 echo "Sauvegarde terminée : $DATE"
 EOBACK
 
+echo "Installation et activation de cron..."
+apt install -y cron
+
+echo "Configuration de la sauvegarde planifiée..."
+
+cat > /etc/cron.d/backup_sae << EOCRON
+0 2 * * * root /usr/local/bin/backup.sh >> /var/log/backup.log 2>&1
+EOCRON
+
+chmod 644 /etc/cron.d/backup_sae
+
+systemctl enable cron
+systemctl restart cron
+
+echo "Sauvegarde automatique programmée tous les jours à 2h."
+
 chmod +x /usr/local/bin/backup.sh
 EOS
 
