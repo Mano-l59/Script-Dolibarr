@@ -8,24 +8,24 @@ L'objectif est de permettre le déploiement rapide et isolé d'instances Dolibar
 
 ### Architecture Technique
 L'infrastructure se compose de trois machines virtuelles principales :
-* [cite_start]**SAE4db (10.42.173.11)** : Serveur PostgreSQL hébergeant les bases de données clients[cite: 14, 15].
-* [cite_start]**SAE4dolibarr (10.42.173.10)** : Serveur d'applications utilisant **Podman** pour isoler chaque client dans un conteneur dédié[cite: 8, 15].
-* [cite_start]**SAE4save (10.42.173.12)** : Serveur de sauvegarde centralisant les dumps SQL via un démon **rsync**[cite: 1, 15].
+* **SAE4db (10.42.173.11)** : Serveur PostgreSQL hébergeant les bases de données clients
+* **SAE4dolibarr (10.42.173.10)** : Serveur d'applications utilisant **Podman** pour isoler chaque client dans un conteneur dédié
+* **SAE4save (10.42.173.12)** : Serveur de sauvegarde centralisant les dumps SQL via un démon **rsync**
 
 ## 🚀 Fonctionnalités des Scripts
 
 Les scripts sont numérotés pour respecter l'ordre logique de déploiement :
 
-1.  [cite_start]**Initialisation (`1 - Initialisation des VMs`)** : Crée, démarre et configure le réseau statique des trois machines virtuelles sur le serveur `dattier`[cite: 12, 13, 15].
-2.  [cite_start]**Installation Base de Données (`2 - Installation de PostgreSQL`)** : Déploie un conteneur PostgreSQL 15 avec un volume persistant pour les données[cite: 10, 11].
-3.  [cite_start]**Configuration Application (`3 - Configuration de Dolibarr`)** : Prépare l'environnement Podman et lance une instance de référence[cite: 8, 9].
+1.  **Initialisation (`1 - Initialisation des VMs`)** : Crée, démarre et configure le réseau statique des trois machines virtuelles sur le serveur `dattier`
+2.  **Installation Base de Données (`2 - Installation de PostgreSQL`)** : Déploie un conteneur PostgreSQL 15 avec un volume persistant pour les données
+3.  **Configuration Application (`3 - Configuration de Dolibarr`)** : Prépare l'environnement Podman et lance une instance de référence
 4.  **Gestion des Clients (`4 - Ajout Client`)** : Automatise l'ajout d'un nouveau client en créant :
-    * [cite_start]Un utilisateur et une base de données PostgreSQL dédiés.
-    * [cite_start]Un conteneur Dolibarr isolé sur un port spécifique[cite: 5, 7].
+    * Un utilisateur et une base de données PostgreSQL dédiés.
+    * Un conteneur Dolibarr isolé sur un port spécifique
 5.  **Sauvegardes (`5 - Mise en place des sauvegardes`)** : 
-    * [cite_start]Configure un serveur rsync sécurisé sur la VM de sauvegarde[cite: 1].
-    * [cite_start]Met en place un script de dump automatique sur le serveur DB[cite: 2, 3].
-    * [cite_start]Planifie une tâche **cron** quotidienne à 02:00[cite: 3, 4].
+    * Configure un serveur rsync sécurisé sur la VM de sauvegarde
+    * Met en place un script de dump automatique sur le serveur DB
+    * Planifie une tâche **cron** quotidienne à 02:00
 
 ## 🛠️ Utilisation
 
