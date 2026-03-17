@@ -18,14 +18,14 @@ L'infrastructure se compose de trois machines virtuelles, elles-mêmes héberger
 
 Les scripts sont numérotés pour respecter l'ordre logique de déploiement :
 
-1.  **Initialisation (`1 - Initialisation des VMs`)** : Crée, démarre et configure le réseau statique des trois machines virtuelles sur la machine de virtualisation `dattier`
-2.  **Installation Base de Données (`2 - Installation de PostgreSQL`)** : Déploie un conteneur PostgreSQL 15 avec un volume persistant pour les données
-3.  **Reverse Proxy (`3 - Activation du Reverse Proxy : Traefik`)** : Active et configure **Traefik** pour exposer les instances Dolibarr via un point d'entrée unique
-4.  **Configuration Application (`4 - Configuration de Dolibarr`)** : Prépare l'environnement Podman et lance une instance de référence
-5.  **Gestion des Clients (`5 - Ajout Client`)** : Automatise l'ajout d'un nouveau client en créant :
+1.  **Initialisation (`1 - Initialisation des VMs.sh`)** : Crée, démarre et configure le réseau statique des trois machines virtuelles sur la machine de virtualisation `dattier`
+2.  **Installation Base de Données (`2 - Installation de PostgreSQL.sh`)** : Déploie un conteneur PostgreSQL 15 avec un volume persistant pour les données
+3.  **Reverse Proxy (`3 - Activation du Reverse Proxy : Traefik.sh`)** : Active et configure **Traefik** pour exposer les instances Dolibarr via un point d'entrée unique
+4.  **Configuration Application (`4 - Configuration de Dolibarr.sh`)** : Prépare l'environnement Podman et lance une instance de référence
+5.  **Gestion des Clients (`5 - Ajout Client.sh`)** : Automatise l'ajout d'un nouveau client en créant :
     * Un utilisateur et une base de données PostgreSQL dédiés.
     * Un conteneur Dolibarr isolé sur un port spécifique
-6.  **Sauvegardes (`6 - Mise en place des sauvegardes`)** : 
+6.  **Sauvegardes (`6 - Mise en place des sauvegardes.sh`)** : 
     * Configure un serveur rsync sécurisé sur la VM de sauvegarde
     * Met en place un script de dump automatique sur le serveur DB
     * Planifie une tâche **cron** quotidienne à 02:00
