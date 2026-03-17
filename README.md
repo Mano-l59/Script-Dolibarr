@@ -18,7 +18,7 @@ L'infrastructure se compose de trois machines virtuelles, elles-mêmes héberger
 
 Les scripts sont numérotés pour respecter l'ordre logique de déploiement :
 
-1.  **Initialisation (`1 - Initialisation des VMs`)** : Crée, démarre et configure le réseau statique des trois machines virtuelles sur le serveur `dattier`
+1.  **Initialisation (`1 - Initialisation des VMs`)** : Crée, démarre et configure le réseau statique des trois machines virtuelles sur la machine de virtualisation `dattier`
 2.  **Installation Base de Données (`2 - Installation de PostgreSQL`)** : Déploie un conteneur PostgreSQL 15 avec un volume persistant pour les données
 3.  **Configuration Application (`3 - Configuration de Dolibarr`)** : Prépare l'environnement Podman et lance une instance de référence
 4.  **Gestion des Clients (`4 - Ajout Client`)** : Automatise l'ajout d'un nouveau client en créant :
