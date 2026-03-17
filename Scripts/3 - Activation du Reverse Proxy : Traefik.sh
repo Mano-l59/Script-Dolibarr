@@ -39,6 +39,7 @@ podman run -d \
 
 echo "Traefik lancé avec succès."
 echo "Dashboard Traefik non exposé."
+echo "Activation du reverse proxy terminée"
 
 EOS
 

@@ -17,7 +17,7 @@ fi
 #Génération d'un mdp aléatoire
 MDP=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 8)
 
-echo "Déploiement du client $CLIENT"
+echo "Déploiement du client $CLIENT..."
 echo "Mot de passe DB : $MDP"
 
 #Connection à dattier
@@ -72,6 +72,8 @@ podman exec dolibarr_$CLIENT sh -lc 'rm -f /var/www/html/conf/conf.php /var/www/
 
 echo "Conteneur lancé : dolibarr_\$CLIENT"
 podman ps
+
+echo "Déploiement du conteneur Dolibarr client terminé"
 EOS
 
 chmod +x /tmp/ajout_client_psql.sh
@@ -82,5 +84,7 @@ vmiut exec SAE4db
 
 export SCRIPT=/tmp/ajout_client_dolibarr.sh
 vmiut exec SAE4dolibarr
+
+echo "Ajout du client $CLIENT terminé"
 
 EOF

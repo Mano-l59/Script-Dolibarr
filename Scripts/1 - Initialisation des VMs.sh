@@ -30,7 +30,7 @@ declare -A VM_IPS=(
 
 for VM in "${!VM_IPS[@]}"; do
     IP=${VM_IPS[$VM]}
-    echo "Configuration réseau pour $VM -> $IP"
+    echo "Configuration réseau pour $VM -> $IP..."
 
     cat > /tmp/vm_net.sh << EONET_SCRIPT
 #!/bin/bash
@@ -55,10 +55,14 @@ EONET_SCRIPT
     vmiut exec "$VM"
 done
 
+echo "Configuration réseau des VMs terminée"
+
 EOS
 
 chmod +x /tmp/config_IPs.sh
 
 /tmp/config_IPs.sh
+
+echo "Initialisation des VMs terminée"
 
 EOF

@@ -104,4 +104,6 @@ chmod +x /tmp/transfert_save.sh
 export SCRIPT=/tmp/transfert_save.sh
 vmiut exec SAE4db
 
+echo "Mise en place des sauvegardes terminée"
+
 EOF

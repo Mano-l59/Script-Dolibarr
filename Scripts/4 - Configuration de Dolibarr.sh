@@ -38,8 +38,10 @@ podman run -d \
     -v dolibarr_docs:/var/www/documents \
     docker.io/tuxgasy/dolibarr
 
-echo "Conteneur lancé :"
+echo "Conteneur Dolibarr lancé"
 podman ps
+
+echo "Configuration Dolibarr terminée"
 EOS
 
 chmod +x /tmp/config_dolibarr.sh
