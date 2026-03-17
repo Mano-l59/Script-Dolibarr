@@ -41,8 +41,10 @@ netfilter-persistent save
 systemctl enable netfilter-persistent
 systemctl restart netfilter-persistent
 
-echo "Conteneur lancé :"
+echo "Conteneur PostgreSQL lancé"
 podman ps
+
+echo "Installation PostgreSQL terminée"
 EOS
 
 chmod +x /tmp/install_postgres.sh
