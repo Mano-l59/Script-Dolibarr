@@ -1,8 +1,8 @@
 #! /bin/bash
 
-./"1 - Initialisation des VMs"
-./"2 - Installation de PostgreSQL"
-./"3 - Configuration de Dolibarr"
-./"4 - Ajout Client"
-./"5 - Mise en place des sauvegardes"
-./"6 - Activation du Reverse Proxy : Traefik"
+."1 - Initialisation des VMs"
+."2 - Installation de PostgreSQL"
+."3 - Activation du Reverse Proxy : Traefik"
+."4 - Configuration de Dolibarr"
+."5 - Ajout Client"
+."6 - Mise en place des sauvegardes"

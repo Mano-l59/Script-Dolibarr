@@ -20,15 +20,15 @@ Les scripts sont numérotés pour respecter l'ordre logique de déploiement :
 
 1.  **Initialisation (`1 - Initialisation des VMs`)** : Crée, démarre et configure le réseau statique des trois machines virtuelles sur la machine de virtualisation `dattier`
 2.  **Installation Base de Données (`2 - Installation de PostgreSQL`)** : Déploie un conteneur PostgreSQL 15 avec un volume persistant pour les données
-3.  **Configuration Application (`3 - Configuration de Dolibarr`)** : Prépare l'environnement Podman et lance une instance de référence
-4.  **Gestion des Clients (`4 - Ajout Client`)** : Automatise l'ajout d'un nouveau client en créant :
+3.  **Reverse Proxy (`3 - Activation du Reverse Proxy : Traefik`)** : Active et configure **Traefik** pour exposer les instances Dolibarr via un point d'entrée unique
+4.  **Configuration Application (`4 - Configuration de Dolibarr`)** : Prépare l'environnement Podman et lance une instance de référence
+5.  **Gestion des Clients (`5 - Ajout Client`)** : Automatise l'ajout d'un nouveau client en créant :
     * Un utilisateur et une base de données PostgreSQL dédiés.
     * Un conteneur Dolibarr isolé sur un port spécifique
-5.  **Sauvegardes (`5 - Mise en place des sauvegardes`)** : 
+6.  **Sauvegardes (`6 - Mise en place des sauvegardes`)** : 
     * Configure un serveur rsync sécurisé sur la VM de sauvegarde
     * Met en place un script de dump automatique sur le serveur DB
     * Planifie une tâche **cron** quotidienne à 02:00
-6.  **Reverse Proxy (`6 - Activation du Reverse Proxy : Traefik`)** : Active et configure **Traefik** pour exposer les instances Dolibarr via un point d'entrée unique
 
 ### Utilisation
 
@@ -38,7 +38,7 @@ Pour exécuter les scripts il faut avoir une clé ssh fonctionnelle vers la mach
 
 #### Exécter les scripts
 
-Pour faire une installation fonctionnelle vous pouvez exéctuer les scripts dans cet ordre : 1, 2, 3, 6, 4, 5.
+Pour faire une installation fonctionnelle vous pouvez exéctuer les scripts dans cet ordre : 1, 2, 3, 4, 5, 6.
 
 Ou tout simplement exéctuer le script principal qui les exécute 1 à 1.
 
