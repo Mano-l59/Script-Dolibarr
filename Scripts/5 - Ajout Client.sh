@@ -14,15 +14,23 @@ if ! [[ "$CLIENT" =~ ^[a-zA-Z0-9_]+$ ]]; then
     exit 1
 fi
 
+MACHINE_NAME_RAW=$(hostname -s 2>/dev/null || hostname)
+MACHINE_NAME=$(echo "$MACHINE_NAME_RAW" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]/-/g')
+
+if [ -z "$MACHINE_NAME" ]; then
+    MACHINE_NAME="machine"
+fi
+
 #Génération d'un mdp aléatoire
 MDP=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 8)
 
 echo "Déploiement du client $CLIENT..."
+echo "Nom machine détecté : $MACHINE_NAME"
 echo "Mot de passe DB : $MDP"
 
 #Connection à dattier
 
-ssh -T mano.lemaire.etu@dattier.iutinfo.fr "CLIENT='$CLIENT' MDP='$MDP' bash -s" << 'EOF'
+ssh -T mano.lemaire.etu@dattier.iutinfo.fr "CLIENT='$CLIENT' MDP='$MDP' MACHINE_NAME='$MACHINE_NAME' bash -s" << 'EOF'
 
 #Ajout de la base du client
 
@@ -58,11 +66,11 @@ podman run -d \
     -e DOLI_DB_NAME=$CLIENT \
     -e DOLI_DB_USER=$CLIENT \
     -e DOLI_DB_PASSWORD=$MDP \
-    -e DOLI_URL_ROOT=http://$CLIENT.local \
+    -e DOLI_URL_ROOT=http://$CLIENT.$MACHINE_NAME.iutinfo.fr \
     -e DOLI_INSTALL_AUTO=0 \
     -e DOLI_PROD=0 \
     --label traefik.enable=true \
-    --label "traefik.http.routers.$CLIENT.rule=Host(\"$CLIENT.local\")" \
+    --label "traefik.http.routers.$CLIENT.rule=Host(\"$CLIENT.$MACHINE_NAME.iutinfo.fr\")" \
     --label "traefik.http.routers.$CLIENT.entrypoints=web" \
     --label "traefik.http.services.$CLIENT.loadbalancer.server.port=80" \
     docker.io/tuxgasy/dolibarr:latest
@@ -86,5 +94,6 @@ export SCRIPT=/tmp/ajout_client_dolibarr.sh
 vmiut exec SAE4dolibarr
 
 echo "Ajout du client $CLIENT terminé"
+echo "URL client : http://$CLIENT.$MACHINE_NAME.iutinfo.fr"
 
 EOF
