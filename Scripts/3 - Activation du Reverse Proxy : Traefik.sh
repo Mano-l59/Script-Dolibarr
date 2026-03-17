@@ -29,10 +29,8 @@ podman run -d \
   --network traefik \
   -p 80:80 \
   -p 443:443 \
-  -p 8080:8080 \
   -v /run/podman/podman.sock:/run/podman/podman.sock:ro \
   docker.io/library/traefik:v2.10 \
-  --api.insecure=true \
   --providers.docker=true \
   --providers.docker.endpoint=unix:///run/podman/podman.sock \
   --providers.docker.exposedbydefault=false \
@@ -40,7 +38,7 @@ podman run -d \
   --entrypoints.web.address=:80
 
 echo "Traefik lancé avec succès."
-echo "Dashboard disponible sur : http://IP_SAE4dolibarr:8080"
+echo "Dashboard Traefik non exposé."
 
 EOS
 

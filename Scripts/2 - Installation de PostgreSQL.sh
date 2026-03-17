@@ -33,9 +33,13 @@ podman run -d \
     docker.io/library/postgres:15
 
 echo "Restriction d'accès PostgreSQL au strict nécessaire (SAE4dolibarr uniquement)..."
+DEBIAN_FRONTEND=noninteractive apt install -y iptables netfilter-persistent iptables-persistent
 iptables -C INPUT -p tcp --dport 5432 -s 127.0.0.1 -j ACCEPT 2>/dev/null || iptables -I INPUT -p tcp --dport 5432 -s 127.0.0.1 -j ACCEPT
 iptables -C INPUT -p tcp --dport 5432 -s 10.42.173.10 -j ACCEPT 2>/dev/null || iptables -I INPUT -p tcp --dport 5432 -s 10.42.173.10 -j ACCEPT
 iptables -C INPUT -p tcp --dport 5432 -j DROP 2>/dev/null || iptables -A INPUT -p tcp --dport 5432 -j DROP
+netfilter-persistent save
+systemctl enable netfilter-persistent
+systemctl restart netfilter-persistent
 
 echo "Conteneur lancé :"
 podman ps
