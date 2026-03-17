@@ -9,7 +9,7 @@ Ce dépôt contient l'ensemble des scripts nécessaires pour mettre en place aut
 L'objectif est de permettre le déploiement rapide et isolé d'instances Dolibarr pour différents clients. L'infrastructure repose sur la virtualisation et la conteneurisation pour garantir la sécurité et la maintenabilité.
 
 #### Architecture Technique
-L'infrastructure se compose de trois machines virtuelles, elles-mêmes héberger sur Dattier :
+L'infrastructure se compose de trois machines virtuelles, elles-mêmes hébergées sur Dattier :
 * **SAE4db (10.42.173.11)** : Serveur PostgreSQL hébergeant les bases de données clients
 * **SAE4dolibarr (10.42.173.10)** : Serveur d'applications utilisant **Podman** pour isoler chaque client dans un conteneur dédié
 * **SAE4save (10.42.173.12)** : Serveur de sauvegarde centralisant les dumps SQL via un démon **rsync**
@@ -36,10 +36,10 @@ Les scripts sont numérotés pour respecter l'ordre logique de déploiement :
 
 Pour exécuter les scripts il faut avoir une clé ssh fonctionnelle vers la machine dattier.
 
-#### Exécter les scripts
+#### Exécuter les scripts
 
-Pour faire une installation fonctionnelle vous pouvez exéctuer les scripts dans cet ordre : 1, 2, 3, 4, 5, 6.
+Pour faire une installation fonctionnelle vous pouvez exécuter les scripts dans cet ordre : 1, 2, 3, 4, 5, 6.
 
-Ou tout simplement exéctuer le script principal qui les exécute 1 à 1.
+Ou tout simplement exécuter le script principal qui les exécute 1 à 1.
 
 Pour configurer un nouvel utilisateur il vous faudra aussi suivre la [Procédure : Configuration Dolibarr](Procédure%20:%20Configuration%20Dolibarr)

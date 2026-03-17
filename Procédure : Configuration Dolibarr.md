@@ -30,7 +30,7 @@ Renseignez les informations nécessaires pour vous connecter à votre base de do
 - Nom de la base de données : `[nom]`
 - Type du pilote : `pgsql`
 - Identifiant : `[nom]`
-- Mot de passe : `[mdp_donné_à_la_creation_du_client]`
+- Mot de passe : `[mdp_donné_à_la_création_du_client]`
 
 Gardez bien les 2 cases décochées.
 Et gardez les autres valeurs par défaut.
