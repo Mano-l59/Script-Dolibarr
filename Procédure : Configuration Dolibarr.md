@@ -6,11 +6,11 @@ L'auto-installation de Dolibarr avec PostgreSQL et l'image Podman utilisée n'é
 
 ## Pré-requis
 
-Pour pouvoir vous connecter à votre solution Dolibarr à l'adresse "[nom].local:8080",
-vous devrez ajouter à votre fichier /etc/hosts la ligne suivante : "127.0.0.1 [nom].local:8080".
-Avec [nom] comme nom de client.
+Pour pouvoir vous connecter à votre solution Dolibarr à l'adresse `[nom].local:8080`,
+vous devrez ajouter à votre fichier `/etc/hosts` la ligne suivante : `127.0.0.1 [nom].local:8080`.
+Avec `[nom]` comme nom de client.
 
-Lorsque vous vous connecterez pour la première fois à votre Dolibarr à l'adresse : "[nom].local:8080"
+Lorsque vous vous connecterez pour la première fois à votre Dolibarr à l'adresse : `[nom].local:8080`
 Vous devrez suivre les étapes et renseigner les bonnes informations, voici une suite de captures d'écran,
 pour guider votre parcours :
 
@@ -27,10 +27,10 @@ Appuyez sur le bouton **Démarrer**.
 ### Étape 3
 Renseignez les informations nécessaires pour vous connecter à votre base de données ;
 
-- Nom de la base de données : [nom]
-- Type du pilote : pgsql
-- Identifiant : [nom]
-- Mot de passe : [mdp_donné_à_la_creation_du_client]
+- Nom de la base de données : `[nom]`
+- Type du pilote : `pgsql`
+- Identifiant : `[nom]`
+- Mot de passe : `[mdp_donné_à_la_creation_du_client]`
 
 Gardez bien les 2 cases décochées.
 Et gardez les autres valeurs par défaut.
