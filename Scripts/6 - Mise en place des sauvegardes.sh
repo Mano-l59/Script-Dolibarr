@@ -74,9 +74,14 @@ for DB in $DBS; do
     podman exec postgres_doli pg_dump -U dolibarr "$DB" > "$BACKUP_DIR/$DB.sql"
 done
 
+
 echo "Envoi vers serveur de sauvegarde via rsync daemon..."
 
 rsync -a "$BACKUP_DIR/" rsync://10.42.173.12/backups/$DATE/
+
+# Deleting backups older then 30 days to save storage
+rm -rf "$BACKUP_DIR"
+find $BACKUP_DIR/ -mindepth 1 -maxdepth 1 -type d -mtime +1 -exec rm -rf {} +
 
 echo "Sauvegarde terminée : $DATE"
 EOBACK
@@ -86,6 +91,7 @@ apt install -y cron
 
 echo "Configuration de la sauvegarde planifiée..."
 
+#cron for backup every 2AM
 cat > /etc/cron.d/backup_sae << EOCRON
 0 2 * * * root /usr/local/bin/backup.sh >> /var/log/backup.log 2>&1
 EOCRON

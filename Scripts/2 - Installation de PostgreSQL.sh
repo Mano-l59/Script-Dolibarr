@@ -32,6 +32,8 @@ podman run -d \
     -p 5432:5432 \
     docker.io/library/postgres:15
 
+# Giving access to DB only to the SAE$dolibarr VM for security reasons.
+
 echo "Restriction d'accès PostgreSQL au strict nécessaire (SAE4dolibarr uniquement)..."
 DEBIAN_FRONTEND=noninteractive apt install -y iptables netfilter-persistent iptables-persistent
 iptables -C INPUT -p tcp --dport 5432 -s 127.0.0.1 -j ACCEPT 2>/dev/null || iptables -I INPUT -p tcp --dport 5432 -s 127.0.0.1 -j ACCEPT

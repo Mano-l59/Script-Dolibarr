@@ -24,6 +24,8 @@ podman volume create dolibarr_docs
 
 echo "Lancement du conteneur Dolibarr..."
 
+# Starting dolibarr container. Linking to existing DB
+
 podman run -d \
     --name dolibarr \
     --network traefik \

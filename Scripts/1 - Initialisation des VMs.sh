@@ -8,6 +8,8 @@ ssh -T mano.lemaire.etu@dattier.iutinfo.fr << 'EOF'
 
 VM_LIST=("SAE4db" "SAE4dolibarr" "SAE4save")
 
+# Checking if exists before creating VMs. If so - delete.
+
 for VM in "${VM_LIST[@]}"; do
     if vmiut lister | grep -q "$VM"; then
         vmiut supprimer "$VM"
@@ -19,8 +21,12 @@ done
 echo "Attente démarrage..."
 sleep 20
 
+# sleep 20 to turn properly the VMs
+
 cat > /tmp/config_IPs.sh << 'EOS'
 #!/bin/bash
+
+# Attributing the IPs to VMs
 
 declare -A VM_IPS=(
     [SAE4db]=10.42.173.11
