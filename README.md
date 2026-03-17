@@ -42,4 +42,4 @@ Pour faire une installation fonctionnelle vous pouvez exécuter les scripts dans
 
 Ou tout simplement exécuter le script principal qui les exécute 1 à 1.
 
-Pour configurer un nouvel utilisateur il vous faudra aussi suivre la [Procédure : Configuration Dolibarr](./Procédure : Configuration Dolibarr.md)
+Pour configurer un nouvel utilisateur il vous faudra aussi suivre la [Procédure : Configuration Dolibarr](./Proc%C3%A9dure%20:%20Configuration%20Dolibarr.md)
