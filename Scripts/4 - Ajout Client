@@ -4,24 +4,20 @@
 
 CLIENT=$1
 
-if [ -z "$CLIENT" ]; then
-    echo "Usage: $0 nom_client"
+if ! [[ "$CLIENT" =~ ^[a-zA-Z0-9_]+$ ]]; then
+    echo "Nom client invalide (lettres, chiffres, underscore)"
     exit 1
 fi
 
 #Génération d'un mdp aléatoire
 MDP=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 8)
 
-#Génération d'un port aléatoire
-PORT=$((8000 + RANDOM % 1000))
-
 echo "Déploiement du client $CLIENT"
 echo "Mot de passe DB : $MDP"
-echo "Port utilisé : $PORT"
 
 #Connection à dattier
 
-ssh -T mano.lemaire.etu@dattier.iutinfo.fr << EOF
+ssh -T mano.lemaire.etu@dattier.iutinfo.fr "CLIENT='$CLIENT' MDP='$MDP' bash -s" << 'EOF'
 
 #Ajout de la base du client
 
@@ -32,6 +28,8 @@ echo "Ajout de la base de $CLIENT..."
 podman exec -i postgres_doli psql -U dolibarr << SQL
 CREATE USER $CLIENT WITH PASSWORD '$MDP';
 CREATE DATABASE $CLIENT OWNER $CLIENT;
+\connect $CLIENT
+GRANT USAGE, CREATE ON SCHEMA public TO $CLIENT;
 SQL
 
 EOS
@@ -41,21 +39,33 @@ cat > /tmp/ajout_client_dolibarr.sh << EOS
 
 echo "Lancement du conteneur Dolibarr de $CLIENT..."
 
+podman network exists traefik || podman network create traefik
+
 podman rm -f dolibarr_$CLIENT 2>/dev/null
 
-podman run -d \\
-    --name dolibarr_$CLIENT \\
-    -p $PORT:80 \\
-    -e DOLI_DB_TYPE=pgsql \\
-    -e DOLI_DB_HOST=10.42.173.11 \\
-    -e DOLI_DB_NAME=$CLIENT \\
-    -e DOLI_DB_USER=$CLIENT \\
-    -e DOLI_DB_PASSWORD=$MDP \\
-    -e DOLI_DB_PORT=5432 \\
-    -e DOLI_DB_HOST_PORT=5432 \\
-    docker.io/tuxgasy/dolibarr
+podman run -d \
+    --name dolibarr_$CLIENT \
+    --network traefik \
+    -e DOLI_DB_TYPE=pgsql \
+    -e DOLI_DB_HOST=10.42.173.11 \
+    -e DOLI_DB_PORT=5432 \
+    -e DOLI_DB_HOST_PORT=5432 \
+    -e DOLI_DB_NAME=$CLIENT \
+    -e DOLI_DB_USER=$CLIENT \
+    -e DOLI_DB_PASSWORD=$MDP \
+    -e DOLI_URL_ROOT=http://$CLIENT.local \
+    -e DOLI_INSTALL_AUTO=0 \
+    -e DOLI_PROD=0 \
+    --label traefik.enable=true \
+    --label "traefik.http.routers.$CLIENT.rule=Host(\"$CLIENT.local\")" \
+    --label "traefik.http.routers.$CLIENT.entrypoints=web" \
+    --label "traefik.http.services.$CLIENT.loadbalancer.server.port=80" \
+    docker.io/tuxgasy/dolibarr:latest
 
-echo "Conteneur lancé :"
+sleep 5
+podman exec dolibarr_$CLIENT sh -lc 'rm -f /var/www/html/conf/conf.php /var/www/documents/install.lock'
+
+echo "Conteneur lancé : dolibarr_\$CLIENT"
 podman ps
 EOS
 

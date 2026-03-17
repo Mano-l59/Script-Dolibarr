@@ -26,7 +26,7 @@ echo "Lancement du conteneur Dolibarr..."
 
 podman run -d \
     --name dolibarr \
-    -p 80:80 \
+    --network traefik \
     -e DOLI_DB_TYPE=pgsql \
     -e DOLI_DB_HOST=10.42.173.11 \
     -e DOLI_DB_NAME=dolibarr \
