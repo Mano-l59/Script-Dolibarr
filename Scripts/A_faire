@@ -1,0 +1,43 @@
+
+#!/bin/bash
+# sur vm avec traefik
+sudo apt update && sudo apt install -y libnss3-tools
+curl -L https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.4.4-linux-amd64 -o mkcert
+chmod +x mkcert
+sudo mv mkcert /usr/loca/bin/
+
+mkcert -install
+
+mkdir -p /opt/traefik/certs
+cd /opt/traefik/certs
+mkcert "domaines a mettre --> ca va peut etre marcher, a tester *.*.iutinfo.fr", "localhost" 127.0.0.1
+
+
+#MAJ Activation Traefik
+
+mkdir -p /opt/traefik/config
+
+cat > /opt/traefik/config/certs.yml << EOF
+tls:
+        certificates:
+                - cerfFile: /certs/cert.pem
+                  keyFile: /certs/key.pem
+EOF
+
+podman run -d \
+        --name traefik \
+        --network traefik \
+        -p 80:80 -p 443:443\
+        -v /opt/traefik/certs:/certs:ro \
+        -v /opt/traefik/config:/etc/traefik/dynamic:ro \
+        -v /run/podman/podman.sock:/run/podman/podman.sock:ro \
+        docker.io/library/traefik:v2.10 \
+        --providers.docker=true\
+        --providers.file.directory=/etc/traefik/dynamic \
+        --entrypoints.web.address=:80 \
+        --entrypoints.websecure.address=:443 \
+        --entrypoints.web.http.redirection.entryPoint.to=websecure \
+        --entypoints.web.http.redirections.entryPoint.scheme=https
+
+# A ajouter dans le Cliend Add niveau podman
+--label "traefik.http.routers.${CLIENT}.tls=true"
