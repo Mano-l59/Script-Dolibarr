@@ -28,6 +28,7 @@ Les scripts sont numérotés pour respecter l'ordre logique de déploiement :
     * Configure un serveur rsync sécurisé sur la VM de sauvegarde
     * Met en place un script de dump automatique sur le serveur DB
     * Planifie une tâche **cron** quotidienne à 02:00
+6.  **Reverse Proxy (`6 - Activation du Reverse Proxy : Traefik`)** : Active et configure **Traefik** pour exposer les instances Dolibarr via un point d'entrée unique
 
 ### Utilisation
 
@@ -41,7 +42,4 @@ Pour faire une installation fonctionnelle vous pouvez exéctuer les scripts dans
 
 Ou tout simplement exéctuer le script principal qui les exécute 1 à 1.
 
-Pour configurer un nouvel utilisateur il vous faudra aussi suivre la Procédure : Configuration Dolibarr
-
-Mano Lemaire
-Mark Zavadskyi
+Pour configurer un nouvel utilisateur il vous faudra aussi suivre la [Procédure : Configuration Dolibarr](Procédure%20:%20Configuration%20Dolibarr)
