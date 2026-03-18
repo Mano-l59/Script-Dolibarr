@@ -1,6 +1,6 @@
 #! /bin/bash
 
-#Connection à dattier
+#Connexion à dattier
 
 ssh -T mano.lemaire.etu@dattier.iutinfo.fr << 'EOF'
 
@@ -24,7 +24,7 @@ podman volume create dolibarr_docs
 
 echo "Lancement du conteneur Dolibarr..."
 
-# Starting dolibarr container. Linking to existing DB
+#Lance le conteneur Dolibarr et le relie à la base existante.
 
 podman run -d \
     --name dolibarr \

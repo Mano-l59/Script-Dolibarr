@@ -1,6 +1,6 @@
 #! /bin/bash
 
-#Connection à dattier
+#Connexion à dattier
 
 ssh -T mano.lemaire.etu@dattier.iutinfo.fr << 'EOF'
 
@@ -8,7 +8,7 @@ ssh -T mano.lemaire.etu@dattier.iutinfo.fr << 'EOF'
 
 VM_LIST=("SAE4db" "SAE4dolibarr" "SAE4save")
 
-# Checking if exists before creating VMs. If so - delete.
+#Vérifie si la VM existe déjà, puis la supprime avant recréation.
 
 for VM in "${VM_LIST[@]}"; do
     if vmiut lister | grep -q "$VM"; then
@@ -21,12 +21,12 @@ done
 echo "Attente démarrage..."
 sleep 20
 
-# sleep 20 to turn properly the VMs
+#Attend 20 secondes pour laisser les VMs démarrer correctement.
 
 cat > /tmp/config_IPs.sh << 'EOS'
 #!/bin/bash
 
-# Attributing the IPs to VMs
+#Attribution des adresses IP aux VMs.
 
 declare -A VM_IPS=(
     [SAE4db]=10.42.173.11

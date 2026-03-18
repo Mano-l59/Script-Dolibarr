@@ -4,35 +4,33 @@
 
 CLIENT=$1
 
-# If no argument -> revoke
+#Si aucun argument n'est fourni, arrête le script.
 if [ -z "$CLIENT" ]; then
     echo "Usage: $0 <nom_client>"
     exit 1
 fi
 
-# If username not in [a-zA-Z0-9_] -> revoke
+#Si le nom client ne respecte pas [a-zA-Z0-9_], arrête le script.
 if ! [[ "$CLIENT" =~ ^[a-zA-Z0-9_]+$ ]]; then
-    echo "Error: Nom client invalide (lettres, chiffres, underscore)"
+    echo "Nom client invalide (lettres, chiffres, underscore)"
     exit 1
 fi
 
-# Parcing STU hostname. If error -> using standart one
 MACHINE_NAME_RAW=$(hostname -s 2>/dev/null || hostname)
 MACHINE_NAME=$(echo "$MACHINE_NAME_RAW" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]/-/g')
 
-# If empty -> use 'machine'
 if [ -z "$MACHINE_NAME" ]; then
     MACHINE_NAME="machine"
 fi
 
-# Génération d'un mdp aléatoire
+#Génération d'un mdp aléatoire
 MDP=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 8)
 
 echo "Déploiement du client $CLIENT..."
 echo "Nom machine détecté : $MACHINE_NAME"
 echo "Mot de passe DB : $MDP"
 
-#Connection à dattier
+#Connexion à dattier
 
 ssh -T mano.lemaire.etu@dattier.iutinfo.fr "CLIENT='$CLIENT' MDP='$MDP' MACHINE_NAME='$MACHINE_NAME' bash -s" << 'EOF'
 

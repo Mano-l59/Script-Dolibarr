@@ -1,6 +1,6 @@
 #! /bin/bash
 
-#Connection à dattier
+#Connexion à dattier
 
 ssh -T mano.lemaire.etu@dattier.iutinfo.fr << 'EOF'
 

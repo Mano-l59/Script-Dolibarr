@@ -1,6 +1,6 @@
 #! /bin/bash
 
-#Connection à dattier
+#Connexion à dattier
 
 ssh -T mano.lemaire.etu@dattier.iutinfo.fr << 'EOF'
 
@@ -32,7 +32,7 @@ podman run -d \
     -p 5432:5432 \
     docker.io/library/postgres:15
 
-# Giving access to DB only to the SAE$dolibarr VM for security reasons.
+#Donne l'accès à la base uniquement à la VM SAE4dolibarr pour des raisons de sécurité.
 
 echo "Restriction d'accès PostgreSQL au strict nécessaire (SAE4dolibarr uniquement)..."
 DEBIAN_FRONTEND=noninteractive apt install -y iptables netfilter-persistent iptables-persistent

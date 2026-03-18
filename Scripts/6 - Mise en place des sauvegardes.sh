@@ -1,6 +1,6 @@
 #! /bin/bash
 
-#Connection à dattier
+#Connexion à dattier
 
 ssh -T mano.lemaire.etu@dattier.iutinfo.fr << 'EOF'
 
@@ -12,12 +12,12 @@ echo "Installation et configuration du serveur rsync..."
 apt update
 apt install -y rsync
 
-# Dossier de stockage
+#Dossier de stockage
 mkdir -p /backups
 chown -R nobody:nogroup /backups
 chmod 700 /backups
 
-# Configuration rsync daemon
+#Configuration rsync daemon
 cat > /etc/rsyncd.conf << EOCONF
 uid = nobody
 gid = nogroup
@@ -34,7 +34,7 @@ pid file = /var/run/rsyncd.pid
     hosts allow = 10.42.173.11
 EOCONF
 
-# Activer rsync en mode démon
+#Activer rsync en mode démon
 echo "RSYNC_ENABLE=true" > /etc/default/rsync
 systemctl enable rsync
 systemctl restart rsync
@@ -74,14 +74,9 @@ for DB in $DBS; do
     podman exec postgres_doli pg_dump -U dolibarr "$DB" > "$BACKUP_DIR/$DB.sql"
 done
 
-
 echo "Envoi vers serveur de sauvegarde via rsync daemon..."
 
 rsync -a "$BACKUP_DIR/" rsync://10.42.173.12/backups/$DATE/
-
-# Deleting backups older then 30 days to save storage
-rm -rf "$BACKUP_DIR"
-find $BACKUP_DIR/ -mindepth 1 -maxdepth 1 -type d -mtime +1 -exec rm -rf {} +
 
 echo "Sauvegarde terminée : $DATE"
 EOBACK
@@ -91,7 +86,7 @@ apt install -y cron
 
 echo "Configuration de la sauvegarde planifiée..."
 
-#cron for backup every 2AM
+#Cron pour effectuer une sauvegarde tous les jours à 2h.
 cat > /etc/cron.d/backup_sae << EOCRON
 0 2 * * * root /usr/local/bin/backup.sh >> /var/log/backup.log 2>&1
 EOCRON
