@@ -42,4 +42,10 @@ Pour faire une installation fonctionnelle vous pouvez exécuter les scripts dans
 
 Ou tout simplement exécuter le script principal qui les exécute 1 à 1.
 
-Pour configurer un nouvel utilisateur il vous faudra aussi suivre la [Procédure : Configuration Dolibarr.md](Procedure-Configuration_Dolibarr.md)
+Le script d'ajout de https://evandel2.mano.iutinfo.fr:8080/client accepte un paramètre de version majeure Dolibarr (sans sous-version), disponible sur l'image utilisée entre 7 et 19. Par défaut : 19.
+
+Exemple : `./Scripts/5\ -\ Ajout\ Client.sh client1 19`
+
+Pour configurer un nouvel utilisateur il vous faudra aussi suivre la [Procédure : Configuration Dolibarr](Procedure-Configuration_Dolibarr.md)
+
+Pour activer l'accès HTTPS avec certificat autosigné, consulter la [Procédure : Certificat autosigné](Procedure-Certificat-Autosigne.md)

@@ -1,7 +1,7 @@
 #! /bin/bash
 
 CLIENT=$1
-VERSION_DOLIBARR=${2:-23}
+VERSION_DOLIBARR=${2:-19}
 
 if [ -z "$CLIENT" ]; then
 	echo "Usage: $0 <nom_client> [version_dolibarr]"

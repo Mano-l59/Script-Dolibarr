@@ -3,7 +3,7 @@
 #Création de la variable client et vérification qu'il y a un argument
 
 CLIENT=$1
-VERSION_DOLIBARR=${2:-23}
+VERSION_DOLIBARR=${2:-19}
 
 #Si aucun argument n'est fourni, arrête le script.
 if [ -z "$CLIENT" ]; then
@@ -18,12 +18,12 @@ if ! [[ "$CLIENT" =~ ^[a-zA-Z0-9_]+$ ]]; then
 fi
 
 if ! [[ "$VERSION_DOLIBARR" =~ ^[0-9]+$ ]]; then
-    echo "Version Dolibarr invalide : utilisez uniquement une version majeure (ex: 23)"
+    echo "Version Dolibarr invalide : utilisez uniquement une version majeure (ex: 19)"
     exit 1
 fi
 
-if [ "$VERSION_DOLIBARR" -ge 24 ] || [ "$VERSION_DOLIBARR" -lt 1 ]; then
-    echo "Version Dolibarr non autorisée : choisissez une version majeure comprise entre 1 et 23"
+if [ "$VERSION_DOLIBARR" -gt 19 ] || [ "$VERSION_DOLIBARR" -lt 7 ]; then
+    echo "Version Dolibarr non disponible sur l'image tuxgasy/dolibarr : choisissez une version majeure comprise entre 7 et 19"
     exit 1
 fi
 
@@ -80,12 +80,13 @@ podman run -d \
     -e DOLI_DB_NAME=$CLIENT \
     -e DOLI_DB_USER=$CLIENT \
     -e DOLI_DB_PASSWORD=$MDP \
-    -e DOLI_URL_ROOT=http://$CLIENT.$MACHINE_NAME.iutinfo.fr \
+    -e DOLI_URL_ROOT=https://$CLIENT.$MACHINE_NAME.iutinfo.fr \
     -e DOLI_INSTALL_AUTO=0 \
     -e DOLI_PROD=0 \
     --label traefik.enable=true \
     --label "traefik.http.routers.$CLIENT.rule=Host(\"$CLIENT.$MACHINE_NAME.iutinfo.fr\")" \
-    --label "traefik.http.routers.$CLIENT.entrypoints=web" \
+    --label "traefik.http.routers.$CLIENT.entrypoints=websecure" \
+    --label "traefik.http.routers.$CLIENT.tls=true" \
     --label "traefik.http.services.$CLIENT.loadbalancer.server.port=80" \
     docker.io/tuxgasy/dolibarr:$VERSION_DOLIBARR
 
@@ -108,6 +109,6 @@ export SCRIPT=/tmp/ajout_client_dolibarr.sh
 vmiut exec SAE4dolibarr
 
 echo "Ajout du client $CLIENT terminé"
-echo "URL client : http://$CLIENT.$MACHINE_NAME.iutinfo.fr"
+echo "URL client : https://$CLIENT.$MACHINE_NAME.iutinfo.fr"
 
 EOF
