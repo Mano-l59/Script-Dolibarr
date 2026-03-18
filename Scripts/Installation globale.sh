@@ -1,9 +1,10 @@
 #! /bin/bash
 
 CLIENT=$1
+VERSION_DOLIBARR=${2:-23}
 
 if [ -z "$CLIENT" ]; then
-	echo "Usage: $0 <nom_client>"
+	echo "Usage: $0 <nom_client> [version_dolibarr]"
 	exit 1
 fi
 
@@ -16,5 +17,5 @@ fi
 ./"2 - Installation de PostgreSQL.sh"
 ./"3 - Activation du Reverse Proxy : Traefik.sh"
 ./"4 - Configuration de Dolibarr.sh"
-./"5 - Ajout Client.sh" "$CLIENT"
+./"5 - Ajout Client.sh" "$CLIENT" "$VERSION_DOLIBARR"
 ./"6 - Mise en place des sauvegardes.sh"

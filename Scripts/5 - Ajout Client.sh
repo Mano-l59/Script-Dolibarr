@@ -3,6 +3,7 @@
 #Création de la variable client et vérification qu'il y a un argument
 
 CLIENT=$1
+VERSION_DOLIBARR=${2:-23}
 
 #Si aucun argument n'est fourni, arrête le script.
 if [ -z "$CLIENT" ]; then
@@ -13,6 +14,16 @@ fi
 #Si le nom client ne respecte pas [a-zA-Z0-9_], arrête le script.
 if ! [[ "$CLIENT" =~ ^[a-zA-Z0-9_]+$ ]]; then
     echo "Nom client invalide (lettres, chiffres, underscore)"
+    exit 1
+fi
+
+if ! [[ "$VERSION_DOLIBARR" =~ ^[0-9]+$ ]]; then
+    echo "Version Dolibarr invalide : utilisez uniquement une version majeure (ex: 23)"
+    exit 1
+fi
+
+if [ "$VERSION_DOLIBARR" -ge 24 ] || [ "$VERSION_DOLIBARR" -lt 1 ]; then
+    echo "Version Dolibarr non autorisée : choisissez une version majeure comprise entre 1 et 23"
     exit 1
 fi
 
@@ -28,11 +39,12 @@ MDP=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 8)
 
 echo "Déploiement du client $CLIENT..."
 echo "Nom machine détecté : $MACHINE_NAME"
+echo "Version Dolibarr : $VERSION_DOLIBARR"
 echo "Mot de passe DB : $MDP"
 
 #Connexion à dattier
 
-ssh -T mano.lemaire.etu@dattier.iutinfo.fr "CLIENT='$CLIENT' MDP='$MDP' MACHINE_NAME='$MACHINE_NAME' bash -s" << 'EOF'
+ssh -T mano.lemaire.etu@dattier.iutinfo.fr "CLIENT='$CLIENT' MDP='$MDP' MACHINE_NAME='$MACHINE_NAME' VERSION_DOLIBARR='$VERSION_DOLIBARR' bash -s" << 'EOF'
 
 #Ajout de la base du client
 
@@ -75,7 +87,7 @@ podman run -d \
     --label "traefik.http.routers.$CLIENT.rule=Host(\"$CLIENT.$MACHINE_NAME.iutinfo.fr\")" \
     --label "traefik.http.routers.$CLIENT.entrypoints=web" \
     --label "traefik.http.services.$CLIENT.loadbalancer.server.port=80" \
-    docker.io/tuxgasy/dolibarr:latest
+    docker.io/tuxgasy/dolibarr:$VERSION_DOLIBARR
 
 sleep 5
 podman exec dolibarr_$CLIENT sh -lc 'rm -f /var/www/html/conf/conf.php /var/www/documents/install.lock'
