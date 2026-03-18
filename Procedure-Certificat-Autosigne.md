@@ -2,16 +2,17 @@
 
 ## Contexte
 
-Lorsque vous accéderez à votre solution Dolibarr, le certificat étant auto-signé, vous aurez un avertissement vous demandant si vous souhaitez continuer. Vous pouvez évidemment accepter et continuer. Cependant, si vous accédez souvent à ce lien, il peut devenir pénible de constamment valider et revalider. Cette procédure intervient donc pour enlever cet affichage.
+Lorsque vous accédez à votre solution Dolibarr, le certificat HTTPS est auto-signé. Le navigateur affiche donc un avertissement de sécurité.
 
-## Utilisation
+Dans le cadre de la SAÉ, cet avertissement est normal et ne bloque pas l’utilisation de l’application.
 
-Exécutez ces commandes sur votre machine physique :
+## Passer l'avertissement
 
-```bash
-sudo apt-get install -y mkcert
-mkcert -install
-mkcert -cert-file traefik.crt -key-file traefik.key "*.dattier.iutinfo.fr" "dattier.iutinfo.fr" "localhost" "127.0.0.1"
-```
+1. Ouvrez l’URL HTTPS de votre client Dolibarr.
+2. Sur la page d’alerte, cliquez sur **Avancé** (ou **Détails** selon le navigateur).
+3. Cliquez sur **Accepter le risque et continuer**.
+4. Si l’option est proposée, enregistrez l’exception pour éviter de refaire la validation à chaque accès.
 
-Accédez à votre client Dolibarr en HTTPS sans avertissement certificat.
+## Vérification
+
+Après validation, la page Dolibarr doit s’ouvrir normalement en HTTPS.
