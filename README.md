@@ -42,7 +42,7 @@ Pour faire une installation fonctionnelle vous pouvez exécuter les scripts dans
 
 Ou tout simplement exécuter le script principal qui les exécute 1 à 1.
 
-Le script d'ajout de https://evandel2.mano.iutinfo.fr:8080/client accepte un paramètre de version majeure Dolibarr (sans sous-version), disponible sur l'image utilisée entre 7 et 19. Par défaut : 19.
+Le script d'ajout d'un nouvel utilisateur accepte un paramètre de version majeure Dolibarr (sans sous-version), disponible sur l'image utilisée entre 7 et 19. Par défaut : 19.
 
 Exemple : `./Scripts/5\ -\ Ajout\ Client.sh client1 19`
 
